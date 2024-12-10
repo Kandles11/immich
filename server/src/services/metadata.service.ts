@@ -12,7 +12,7 @@ import { AssetFaceEntity } from 'src/entities/asset-face.entity';
 import { AssetEntity } from 'src/entities/asset.entity';
 import { ExifEntity } from 'src/entities/exif.entity';
 import { PersonEntity } from 'src/entities/person.entity';
-import { AssetType, ExifOrientation, ImmichWorker, SourceType } from 'src/enum';
+import { AssetStatus, AssetType, ExifOrientation, ImmichWorker, SourceType } from 'src/enum';
 import { WithoutProperty } from 'src/interfaces/asset.interface';
 import { DatabaseLock } from 'src/interfaces/database.interface';
 import { ArgOf } from 'src/interfaces/event.interface';
@@ -247,6 +247,9 @@ export class MetadataService extends BaseService {
     const autoStackIdToAssetsMap: Record<string, AssetEntity[]> = {};
     const assets = await this.assetRepository.getByIds(assetIds, { exifInfo: true });
     for (const asset of assets) {
+      if (asset.status !== AssetStatus.ACTIVE) {
+        continue
+      }
       const autoStackId = asset.exifInfo?.autoStackId;
       if (autoStackId) {
         if (!autoStackIdToAssetsMap[autoStackId]) {
