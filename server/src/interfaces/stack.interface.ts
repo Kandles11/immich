@@ -9,7 +9,7 @@ export interface StackSearch {
 
 export interface IStackRepository {
   search(query: StackSearch): Promise<StackEntity[]>;
-  create(stack: { ownerId: string; assetIds: string[], autoStackId: string | null }): Promise<StackEntity>;
+  create(stack: { ownerId: string; assetIds: string[]; autoStackId: string | null }): Promise<StackEntity>;
   update(stack: Pick<StackEntity, 'id'> & Partial<StackEntity>): Promise<StackEntity>;
   delete(id: string): Promise<void>;
   deleteAll(ids: string[]): Promise<void>;

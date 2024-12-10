@@ -141,9 +141,9 @@ export class StackRepository implements IStackRepository {
   async getByAutoStackId(autoStackId: string): Promise<StackEntity | null> {
     return this.repository.findOne({
       where: {
-        autoStackId
-      }
-    })
+        autoStackId,
+      },
+    });
   }
 
   private async save(entity: Partial<StackEntity>) {

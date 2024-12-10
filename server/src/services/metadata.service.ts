@@ -138,18 +138,18 @@ export class MetadataService extends BaseService {
         : this.assetRepository.getWithout(pagination, WithoutProperty.EXIF);
     });
 
-    const assetIds: string[] = [] 
+    const assetIds: string[] = [];
 
     for await (const assets of assetPagination) {
       await this.jobRepository.queueAll(
         assets.map((asset) => ({ name: JobName.METADATA_EXTRACTION, data: { id: asset.id } })),
       );
-      assetIds.push(...assets.map((asset) => asset.id))
+      assetIds.push(...assets.map((asset) => asset.id));
     }
     await this.jobRepository.queue({
       name: JobName.CREATE_AUTO_STACKS,
-      data: { ids: assetIds }
-    })
+      data: { ids: assetIds },
+    });
 
     return JobStatus.SUCCESS;
   }
@@ -250,34 +250,32 @@ export class MetadataService extends BaseService {
       const autoStackId = asset.exifInfo?.autoStackId;
       if (autoStackId) {
         if (!autoStackIdToAssetsMap[autoStackId]) {
-          autoStackIdToAssetsMap[autoStackId] = []
+          autoStackIdToAssetsMap[autoStackId] = [];
         }
         autoStackIdToAssetsMap[autoStackId].push(asset);
       }
     }
 
     for (const stackId of Object.keys(autoStackIdToAssetsMap)) {
-      const existingStack = await this.stackRepository.getByAutoStackId(stackId)
-      const assetsInAutoStack = autoStackIdToAssetsMap[stackId]
+      const existingStack = await this.stackRepository.getByAutoStackId(stackId);
+      const assetsInAutoStack = autoStackIdToAssetsMap[stackId];
       if (existingStack) {
         await this.stackRepository.update({
           id: existingStack.id,
-          assets: assetsInAutoStack
-        })
+          assets: assetsInAutoStack,
+        });
       } else {
-        const firstAssetInStack = assetsInAutoStack[0]
+        const firstAssetInStack = assetsInAutoStack[0];
         await this.stackRepository.create({
           autoStackId: stackId,
-          assetIds: assetsInAutoStack.map((asset)=>asset.id),
+          assetIds: assetsInAutoStack.map((asset) => asset.id),
           ownerId: firstAssetInStack.ownerId,
-        })
+        });
       }
     }
 
-    return JobStatus.SUCCESS
+    return JobStatus.SUCCESS;
   }
-
-
 
   @OnJob({ name: JobName.QUEUE_SIDECAR, queue: QueueName.SIDECAR })
   async handleQueueSidecar(job: JobOf<JobName.QUEUE_SIDECAR>): Promise<JobStatus> {
@@ -369,7 +367,6 @@ export class MetadataService extends BaseService {
     }
     return { width, height };
   }
-
 
   private async getExifTags(asset: AssetEntity): Promise<ImmichTags> {
     const mediaTags = await this.metadataRepository.readTags(asset.originalPath);
