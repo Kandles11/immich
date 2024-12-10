@@ -36,6 +36,7 @@ export const stackStub = (stackId: string, assets: AssetEntity[]): StackEntity =
     ownerId: assets[0].ownerId,
     primaryAsset: assets[0],
     primaryAssetId: assets[0].id,
+    autoStackId: null
   };
 };
 
