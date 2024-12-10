@@ -52,6 +52,7 @@ export enum JobName {
   QUEUE_METADATA_EXTRACTION = 'queue-metadata-extraction',
   METADATA_EXTRACTION = 'metadata-extraction',
   LINK_LIVE_PHOTOS = 'link-live-photos',
+  CREATE_AUTO_STACKS = 'create-auto-stacks',
 
   // user
   USER_DELETION = 'user-deletion',
@@ -246,6 +247,7 @@ export type JobItem =
   | { name: JobName.QUEUE_METADATA_EXTRACTION; data: IBaseJob }
   | { name: JobName.METADATA_EXTRACTION; data: IEntityJob }
   | { name: JobName.LINK_LIVE_PHOTOS; data: IEntityJob }
+  | { name: JobName.CREATE_AUTO_STACKS; data: IBulkEntityJob }
   // Sidecar Scanning
   | { name: JobName.QUEUE_SIDECAR; data: IBaseJob }
   | { name: JobName.SIDECAR_DISCOVERY; data: IEntityJob }

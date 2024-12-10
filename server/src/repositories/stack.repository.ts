@@ -138,6 +138,14 @@ export class StackRepository implements IStackRepository {
     });
   }
 
+  async getByAutoStackId(autoStackId: string): Promise<StackEntity | null> {
+    return this.repository.findOne({
+      where: {
+        autoStackId
+      }
+    })
+  }
+
   private async save(entity: Partial<StackEntity>) {
     const { id } = await this.repository.save(entity);
     return this.repository.findOneOrFail({

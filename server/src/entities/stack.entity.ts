@@ -25,4 +25,11 @@ export class StackEntity {
   primaryAssetId!: string;
 
   assetCount?: number;
+
+  @Column({
+    type: 'text',
+    unique: true,
+    nullable: true,
+  })
+  autoStackId!: string | null;
 }
